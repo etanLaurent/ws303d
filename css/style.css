@@ -165,15 +165,32 @@ main{
     grid-template-columns: 1fr 1fr;
 }
 
-#france_carte{
-    display: flex;
-    height: 60%;
+/* CARTE FRANCE */
+
+#map { 
     grid-column: 1/2;
+    height: 100vh; 
+    width: 100%;
 }
 
-#france_carte img{
-    width: 100%;
-    height: 100vh;
+#sliderContainer {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    z-index: 999;
+}
+
+
+#monthLabel {
+    font-weight: bold;
+    font-family: sans-serif;
+    margin-top: 8px;
 }
 
 .side_volet{

@@ -5,17 +5,14 @@
         <meta charset="utf-8">
         <title>Weather Dev Report</title>
         <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1.0">
-        <link rel="stylesheet" href="lib/icofont/icofont.min.css">
-        <link rel="stylesheet" type="text/css" href="js/global-temperature-trends/inspector.css">
         <link rel="stylesheet" href="css/style.css">
-        <script src="js/global-temperature-trends/index.js"></script>
-        <script url="https://observablehq.com/@d3/global-temperature-trends"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     </head>
 <body>
 <h1>
     <header id="header">
     <nav>
-        <a href="../monprojet/index.html" class="logo_nav"><img src="../monprojet/image/WeatherDev_Logo.svg" alt="Logo"></a>
+        <a href="../monprojet/index.html" class="logo_nav"><img src="/image/WeatherDev_Logo.svg" alt="Logo"></a>
         <button class="menu-toggle" aria-label="Menu">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -34,10 +31,21 @@
         </ul>
     </nav>
 </header>
+
+
 <main>
-<div id="france_carte">
-    <img src="image/carte_france_dep.svg">
-</div>
+<section>
+    <div id="map"></div>
+    <div id="sliderContainer">
+    <input type="range" id="monthSlider" min="0" max="95" value="0" step="1">
+    <p id="monthLabel">2018-01</p>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="js/script.js"></script>
+</section>
+
 <div class="side_volet">
     <div class="graph">
         <img class="contenu_graph" href="image/Capture d'écran 2025-10-22 153143.png">
