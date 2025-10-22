@@ -1,3 +1,53 @@
+<!DOCTYPE html>
+
 <html>
-<p>coucou</p>
+    <head>
+        <meta charset="utf-8">
+        <title>Weather Dev</title>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1.0">
+        <link rel="stylesheet" href="lib/icofont/icofont.min.css">
+        <link rel="stylesheet" type="text/css" href="js/global-temperature-trends/inspector.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/global-temperature-trends/index.js"></script>
+        <script url="https://observablehq.com/@d3/global-temperature-trends"></script>
+    </head>
+<body>
+<h1>
+    <header id="header">
+    <nav>
+        <a href="/index.php" class="logo_nav"><img src="/images/logo.png" alt="Logo"></a>
+        <button class="menu-toggle" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul>
+            <li class="undefined">
+                <p>Accueil</p>
+            </li>
+            <li class="undefined">
+                <p>Carte</p>
+            </li>
+            <li class="undefined">
+                <p>Statistique</p>
+            </li>
+            <li class="undefined">
+                <p>+</p>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div id="france_carte">
+    <img src="image/carte_france_dep.svg">
+</div>
+<script type="module">
+
+import define from "js/global-temperature-trends/index.js";
+import {Runtime, Library, Inspector} from "js/global-temperature-trends/runtime.js";
+
+const runtime = new Runtime();
+const main = runtime.module(define, Inspector.into(document.body));
+
+</script>
+</body>
 </html>

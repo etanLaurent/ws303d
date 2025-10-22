@@ -1,0 +1,150 @@
+/* ALL -------------------------------------------------------- */
+
+*{
+  margin: 0;
+  font-family: "Helvetica", serif;
+  padding: 0;
+  box-sizing: border-box;
+  color: #121212;
+}
+
+::selection{
+    color: #fff;
+    background-color: #dcd1e2;
+}
+
+body {
+    background-color: #cec7d061;
+    background-image: url("/images/losange.png");
+    background-size: 4%;
+}
+
+.gap {
+    height: 100px;
+}
+
+
+
+/* STYLES DESKTOP ----------------------------------------------------------------- /
+
+/ HEADER */
+#header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    transition: top 0.3s;
+}
+.logo_nav {
+    height: 100%;
+}
+
+nav {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    
+}
+
+
+nav ul, nav a {
+    display: flex;
+    font-weight: bold;
+    gap: 15px;
+    border-radius: 15px;
+    padding: 10px 15px;
+    
+}
+@media screen and (min-width: 576px) {
+nav ul, .logo_nav{
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.4px);
+    -webkit-backdrop-filter: blur(3.4px);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+}
+}
+
+ul{
+    display: flex;
+    flex-direction: column;
+}
+
+nav li {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li a {
+    text-decoration: none;
+    position: relative;
+}
+
+nav ul li.active a {
+    font-weight: bold;
+    color: #121212;
+}
+
+nav ul li.active a::after {
+    content: "";
+    position: absolute;
+    border-radius: 20px;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    height: 2px;
+    background-color: #121212;
+}
+
+nav ul li a::after {
+    content: ""; 
+    position: absolute;
+    right: 100%;
+    bottom: 0px;
+    width: 0;
+    height: 2px;
+    background-color: #121212;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    right: 0;
+    width: 100%; 
+}
+
+/* Bouton menu (hidden) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1000;
+    position: relative; 
+}
+
+.menu-toggle .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #121212;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+#france_carte{
+    display: flex;
+    height: 60%;
+}
+
+#france_carte img{
+    width: 100%;
+    height: 100vh;
+}
