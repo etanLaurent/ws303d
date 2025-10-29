@@ -324,4 +324,87 @@ h2{
     margin-left: 0;
 }
 
+/* Page membres et tout */
 
+.membres{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 2fr 1fr;
+    margin-top: 25vh;
+}
+
+.blue_contener{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    background-color: #B8F3E2;
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.white_contener{
+    display: flex;
+    text-align: start;
+    background-color: #ffffff;
+    border-radius: 30px;
+    padding: 10px;
+    flex-direction: column;
+}
+
+.mb_image{
+    display: flex;
+    justify-content: center;
+    border-radius: 30px;
+}
+
+#bl1{
+    grid-column: 3/6;
+}
+
+#bl2{
+    grid-column: 2/4;
+    margin-top: 5vh;
+}
+
+#mb_im1{
+    grid-column: 5/7;
+    width: 100%;
+    margin-top: 5vh;
+}
+#mb_im2{
+    grid-column: 3/4;
+    width: 120%;
+    margin-top: 5vh;
+}
+
+#wh1{
+    grid-column: 5/7;
+    margin-top: 5vh;
+}
+
+.blue_contener h1{
+    font-size: xx-large;
+}
+
+.blue_contener h2{
+    font-size: large;
+    margin: 2vw;
+}
+
+.white_contener h1{
+    font-size: x-large;
+    padding: 4%;
+}
+
+.white_contener h2{
+    font-size: medium;
+    margin: 1vw;
+    text-align: left;
+}
+
+hr{
+    grid-column: 1/8;
+    margin-top: 3vh;
+    margin-bottom: 4vh;
+    color: #000000;
+    border-width: 1vh;
+}
