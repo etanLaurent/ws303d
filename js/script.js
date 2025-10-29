@@ -1,14 +1,12 @@
 // ------------------
-// 1️⃣ Création carte Leaflet
-// ------------------
+// Création carte Leaflet
 const map = L.map('map').setView([46.8, 2.5], 6);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; CartoDB, OpenStreetMap'
 }).addTo(map);
 
 // ------------------
-// 2️⃣ Variables globales
-// ------------------
+// Variables globales
 let geojsonLayer;
 let departementsGeoJSON;
 const temperatureData = {}; // { codeDept: { "YYYY-MM": temperature } }
@@ -21,8 +19,7 @@ for (let y = 2018; y <= 2025; y++) {
 }
 
 // ------------------
-// 3️⃣ Charger automatiquement tous les CSV du dossier /data
-// ------------------
+// Charger automatiquement tous les CSV du dossier /data
 async function loadAllData() {
   const response = await fetch('../data/');
   const text = await response.text();
@@ -74,8 +71,7 @@ async function loadAllData() {
 }
 
 // ------------------
-// 4️⃣ Fonction couleur
-// ------------------
+// Fonction couleur
 function getColor(temp) {
   if (temp == null) return '#cccccc';
   return temp > 25 ? '#BD0026' :
@@ -88,8 +84,7 @@ function getColor(temp) {
 }
 
 // ------------------
-// 5️⃣ Mise à jour de la carte
-// ------------------
+// Mise à jour de la carte
 function updateMap(selectedMonth) {
   if (geojsonLayer) geojsonLayer.remove();
 
@@ -107,15 +102,52 @@ function updateMap(selectedMonth) {
     onEachFeature: (feature, layer) => {
       const code = feature.properties.code;
       const temp = temperatureData[code]?.[selectedMonth];
+      
+      layer.on('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const mapElement = document.getElementById('map');
+        const content = document.getElementById('sidebarContent');
+        
+        content.innerHTML = `
+          <h2>${feature.properties.nom}</h2>
+          <p>Code: ${code}</p>
+          <p>Température: ${temp ?? 'N/A'} °C</p>
+          <p>Mois: ${selectedMonth}</p>
+        `;
+        
+        sidebar.classList.add('open');
+        mapElement.classList.add('sidebar-open');
+        
+        // Recentrer la carte après un court délai pour laisser l'animation se terminer
+        setTimeout(() => {
+          map.invalidateSize();
+          const bounds = layer.getBounds();
+          map.fitBounds(bounds);
+        }, 300);
+      });
+
       layer.bindPopup(`${feature.properties.nom}<br><b>${temp ?? 'N/A'} °C</b>`);
     }
   }).addTo(map);
 }
 
+// Modifier la fonction de fermeture du panneau
+document.getElementById('closeSidebar')?.addEventListener('click', () => {
+  const sidebar = document.getElementById('sidebar');
+  const mapElement = document.getElementById('map');
+  sidebar.classList.remove('open');
+  mapElement.classList.remove('sidebar-open');
+  
+  // Recentrer la carte sur la France après fermeture du panneau
+  setTimeout(() => {
+    map.invalidateSize();
+    map.setView([46.8, 2.5], 6);
+  }, 300);
+});
+
 // ------------------
-// 6️⃣ Charger GeoJSON + données
-// ------------------
-fetch('../geo/departements.geojson')
+// Charger GeoJSON + données
+fetch('geo/departements.geojson')
   .then(r => r.json())
   .then(async data => {
     departementsGeoJSON = data;
@@ -124,8 +156,7 @@ fetch('../geo/departements.geojson')
   });
 
 // ------------------
-// 7️⃣ Slider : mise à jour du mois
-// ------------------
+// Slider : mise à jour du mois
 const slider = document.getElementById('monthSlider');
 const label = document.getElementById('monthLabel');
 slider.max = months.length - 1;
