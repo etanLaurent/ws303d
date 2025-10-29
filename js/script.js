@@ -113,6 +113,25 @@ function updateMap(selectedMonth) {
           <p>Code: ${code}</p>
           <p>Température: ${temp ?? 'N/A'} °C</p>
           <p>Mois: ${selectedMonth}</p>
+          <div class="side_volet">
+    <div class="graph">
+        <img class="contenu_graph" href="image/Capture d'écran 2025-10-22 153143.png">
+    </div>
+    <div class="text_graph">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique tenetur dolor error dolore ipsam impedit laborum. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet veniam aliquam tenetur consequuntur, non alias molestiae! Vero voluptatum asperiores voluptate!
+    </div>
+    <div class="graph">
+        
+    </div>
+    <div class="text_graph">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. In ad iste eos, optio quas nesciunt nostrum aut tempore provident aperiam blanditiis omnis culpa,
+    </div>
+    <div class="graph">
+        
+    </div>
+    <div class="text_graph">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ut soluta delectus debitis nostrum minima veritatis, 
+    </div>
         `;
         
         sidebar.classList.add('open');
