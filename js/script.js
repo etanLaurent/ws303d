@@ -9,13 +9,15 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 // Variables globales
 let geojsonLayer;
 let departementsGeoJSON;
-const temperatureData = {}; // { codeDept: { "YYYY-MM": temperature } }
+const temperatureData = {};
 const months = [];
 
+// Génération des mois avec limite à septembre 2025
 for (let y = 2018; y <= 2025; y++) {
-  for (let m = 1; m <= 12; m++) {
-    months.push(`${y}-${String(m).padStart(2, '0')}`);
-  }
+    const maxMonth = y === 2025 ? 9 : 12; // Limiter à septembre pour 2025
+    for (let m = 1; m <= maxMonth; m++) {
+        months.push(`${y}-${String(m).padStart(2, '0')}`);
+    }
 }
 
 // ------------------
