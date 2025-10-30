@@ -8,46 +8,36 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     </head>
-<body>
-<h1>
+<body class="carte-page">
     <header id="header">
-    <nav>
-        <a href="../index.html" class="logo_nav"><img src="../image/WeatherDev_Logo.svg" alt="Logo"></a>
-        <button class="menu-toggle" aria-label="Menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-        <ul>
-            <li class="undefined">
-                <a href="index.html">Accueil</a>
-            </li>
-            <li class="undefined">
-                <a href="carte.html">Carte</a>
-            </li>
-            <li class="undefined">
-                <a href="info.html">+ infos</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<section>
-  <div id="map"></div>
-  <div id="sidebar" class="sidebar">
-    <button id="closeSidebar" class="close-button">&times;</button>
-    <div id="sidebarContent">
-      <!-- Le contenu du panneau sera inséré ici dynamiquement -->
+        <nav>
+            <a href="../index.html" class="logo_nav"><img src="../image/WeatherDev_Logo.svg" alt="Logo"></a>
+        </nav>
+    </header>
+    
+    <div class="info-button">
+        <a href="info.html" aria-label="Plus d'informations">
+            <div class="circle-button">i</div>
+        </a>
     </div>
-  </div>
-  <div id="sliderContainer">
-    <input type="range" id="monthSlider" min="0" max="95" value="0" step="1">
-    <p id="monthLabel">2018-01</p>
-  </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="js/script.js"></script>
-</section>
+    <section>
+      <div id="map"></div>
+      <div id="sidebar" class="sidebar">
+        <button id="closeSidebar" class="close-button">&times;</button>
+        <div id="sidebarContent">
+          <!-- Le contenu du panneau sera inséré ici dynamiquement -->
+        </div>
+      </div>
+      <div id="sliderContainer">
+        <input type="range" id="monthSlider" min="0" max="95" value="0" step="1">
+        <p id="monthLabel">2018-01</p>
+      </div>
+
+      <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+      <script src="js/script.js"></script>
+    </section>
 
 </body>
 </html>
