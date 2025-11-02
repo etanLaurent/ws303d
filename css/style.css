@@ -18,21 +18,6 @@ body {
     background-size: 4%;
 }
 
-.rubik-bubbles-regular {
-  font-family: "Rubik Bubbles", system-ui;
-  font-weight: 400;
-  font-style: normal;
-}
-
-
-.jura-uniquifier {
-  font-family: "Jura", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-
-
 #cloud_back{
     background-image: url(../image/cloud.png);
     background-clip: padding-box;
@@ -342,15 +327,6 @@ h2{
 
 /* Page membres et tout */
 
-#info_page{
-    background-image: url(../image/clouds_again.jpg);
-    background-clip: content-box;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position-y: -1vh;
-    background-attachment: fixed;
-}
-
 .membres{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr 1fr 2fr 1fr;
@@ -361,6 +337,7 @@ h2{
     display: flex;
     justify-content: center;
     text-align: center;
+    background-color: #B8F3E2;
     border-radius: 30px;
     padding: 10px;
 }
@@ -368,6 +345,7 @@ h2{
 .white_contener{
     display: flex;
     text-align: start;
+    background-color: #ffffff;
     border-radius: 30px;
     padding: 10px;
     flex-direction: column;
@@ -389,34 +367,26 @@ h2{
 }
 
 #bl2{
-    background-image: url(../image/paint.png);
-    background-repeat: no-repeat;
-    background-size: 88%;
-    background-position: center;
-    padding: 2vw;
-    grid-column: 2/7;
+    grid-column: 2/5;
     margin-top: 5vh;
-    margin-left: 7vw;
     margin-right: 7vw;
-    padding-left: 22vw;
-    padding-right: 22vw;
 }
 
+#mb_im1{
+    grid-column: 5/7;
+    width: 100%;
+    margin-top: 5vh;
+}
 #mb_im2{
     grid-column: 3/4;
-    width: 160%;
-    margin-top: 10vh;
+    width: 100%;
+    margin-top: 5vh;
 }
 
 #wh1{
-    background-image: url(../image/paint.png);
-    background-repeat: no-repeat;
-    background-size: 120%;
-    background-position: center;
     grid-column: 4/7;
     margin-top: 5vh;
     margin-left: 12vw;
-    padding: 15vh;
 }
 
 #bl3{
@@ -446,29 +416,29 @@ h2{
     grid-column: 2/3;
     margin-top: 5vh;
     width: 100%;
-    height: 35%;
+    height: 50%;
 }
 
 #nc2{
     grid-column: 4/5;
     margin-top: 5vh;
     width: 100%;
-    height: 35%;
+    height: 50%;
 }
 
 #nc3{
     grid-column: 6/7;
     margin-top: 5vh;
     width: 100%;
-    height: 35%;
+    height: 50%;
 }
 
 #nc4{
     display: flex;
     justify-content: space-between;
     grid-column: 2/7;
-    margin-top: -2vh;
-    width: 96%;
+    margin-top: 5vh;
+    width: 100%;
     margin-left: 4vw;
 }
 
@@ -495,8 +465,6 @@ h2{
 
 #bl4 img, #bl5 img, #bl6 img{
     border-radius: 30px;
-    object-fit: cover;
-    width: 25vw;
 }
 
 #nc5 img, #nc6 img{
@@ -504,40 +472,23 @@ h2{
 }
 
 .blue_contener h1{
-    font-size: 4vw;
-    font-weight: 100;
-    color: #fff;
-    font-family: Rubik Bubbles;
+    font-size: xx-large;
 }
 
 .blue_contener h2{
-    font-size: large;
-    margin: 1vw;
-    font-family: Jura;
+    font-size: x-large;
+    margin: 2vw;
 }
 
 .white_contener h1{
-    font-size: large;
-    padding: 2%;
-    font-family: Jura;
+    font-size: x-large;
+    padding: 4%;
 }
 
 .white_contener h2{
-    font-size: small;
+    font-size: medium;
     margin: 1vw;
     text-align: left;
-    font-family: Jura;
-}
-
-.no_contener h1{
-    font-size: xx-large;
-    margin: 2vw;
-    font-family: Jura;
-}
-
-.no_contener p {
-    font-size: x-large;
-    font-family: Jura;
 }
 
 hr{
@@ -547,7 +498,6 @@ hr{
     color: #000000;
     border-width: 1vh;
 }
-
 
 /* Styles spécifiques pour la page carte */
 .carte-page nav {
@@ -605,3 +555,267 @@ hr{
 .carte-page #sidebar.active ~ * .leaflet-control-zoom {
     right: 420px;
 }
+
+/* --- Sidebar content for map details --- */
+.sidebar__header {
+  padding: 24px 24px 12px 24px;
+  border-bottom: 1px solid #eee;
+  background: #f7f7f7;
+  border-radius: 20px 0 0 0;
+}
+.sidebar__dept-name {
+  margin: 0;
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #2d7cb0;
+}
+
+.sidebar__info {
+  padding: 18px 24px 12px 24px;
+  font-size: 1.08em;
+  color: #333;
+}
+.sidebar__info p {
+  margin: 0 0 8px 0;
+}
+
+.sidebar__charts {
+  padding: 12px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.chart-card {
+  background: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06);
+  padding: 18px 16px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.chart-card__title {
+  margin: 0 0 6px 0;
+  font-size: 1.13em;
+  color: #2d7cb0;
+  font-weight: 600;
+}
+.chart-card__placeholder {
+  height: 90px;
+  background: #ffffff; /* fond uni, plus de rayures */
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(0,0,0,0.08); /* bord fin et discret */
+  box-shadow: none;
+  padding: 6px; /* petit padding pour le canvas */
+}
+.chart-card__text {
+  font-size: 0.98em;
+  color: #555;
+  margin: 0;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+
+/* General responsive layout for main grid and typography */
+@media (max-width: 900px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .title_index {
+    font-size: 7vw;
+    margin-top: 16vw;
+  }
+  h2 {
+    margin: 4vw 4vw 4vw 4vw;
+    font-size: 1.3em;
+  }
+  #direct_carte {
+    padding: 4vw 4vw;
+    font-size: 1em;
+    border-radius: 24px;
+  }
+  .membres {
+    grid-template-columns: 1fr;
+    margin-top: 10vw;
+  }
+  .blue_contener, .white_contener {
+    border-radius: 18px;
+    padding: 4vw;
+    font-size: 1em;
+  }
+  #nc5 img, #nc6 img {
+    width: 90vw;
+  }
+}
+
+/* Responsive navigation: hamburger menu */
+@media (max-width: 900px) {
+  nav ul {
+    display: none !important;
+    flex-direction: column;
+    position: absolute;
+    top: 5rem;
+    left: 0;
+    width: 100vw;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    z-index: 2000;
+    padding: 2vw 0;
+  }
+  nav ul.open {
+    display: flex !important;
+  }
+  .menu-toggle {
+    display: block !important;
+  }
+}
+
+/* Responsive map and sidebar */
+@media (max-width: 900px) {
+  #map {
+    height: 60vh;
+    min-height: 320px;
+    width: 100vw !important;
+    grid-column: 1/2;
+  }
+  #map.sidebar-open {
+    width: 100vw !important;
+  }
+}
+
+/* --- SIDEBAR: slide from bottom on mobile --- */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100vw !important;
+    max-width: 100vw;
+    left: 0;
+    right: 0 !important;
+    top: auto;
+    bottom: -100vh;
+    height: 60vh;
+    min-height: 320px;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.18);
+    transition: bottom 0.5s cubic-bezier(.77,0,.18,1);
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .sidebar.open {
+    bottom: 0;
+    right: 0 !important;
+  }
+  .close-button {
+    top: 12px;
+    right: 16px;
+  }
+}
+
+/* Hide sidebar from right on mobile */
+@media (max-width: 900px) {
+  .sidebar {
+    right: auto;
+  }
+}
+
+/* Adjust sidebar content for mobile */
+@media (max-width: 900px) {
+  .sidebar__header, .sidebar__info, .sidebar__charts {
+    padding-left: 6vw;
+    padding-right: 6vw;
+  }
+  .sidebar__charts {
+    padding-bottom: 4vw;
+  }
+}
+
+/* Responsive adjustments for map controls/buttons */
+@media (max-width: 900px) {
+  .carte-page .info-button {
+    bottom: 16px;
+    right: 16px;
+  }
+  .carte-page .leaflet-control-zoom {
+    top: 12px !important;
+    right: 12px !important;
+  }
+}
+
+/* --- RESPONSIVE DESIGN FIXES --- */
+
+/* Make map fullscreen in responsive */
+@media (max-width: 900px) {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  #map {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    z-index: 1;
+    grid-column: 1/2;
+  }
+  #map.sidebar-open {
+    width: 100vw !important;
+  }
+  main {
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* Sidebar slides from bottom and is scrollable in responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    width: 100vw !important;
+    max-width: 100vw;
+    left: 0;
+    right: 0 !important;
+    top: auto;
+    bottom: -100vh;
+    height: 60vh;
+    min-height: 320px;
+    max-height: 80vh;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.18);
+    transition: bottom 0.5s cubic-bezier(.77,0,.18,1);
+    padding-left: 0;
+    padding-right: 0;
+    overflow-y: auto;
+    z-index: 2000;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar.open {
+    bottom: 0;
+    right: 0 !important;
+  }
+  .close-button {
+    top: 12px;
+    right: 16px;
+    z-index: 10;
+  }
+}
+
+/* Prevent background scroll when sidebar is open on mobile */
+@media (max-width: 900px) {
+  body.sidebar-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100vw;
+  }
+}
+

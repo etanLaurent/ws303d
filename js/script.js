@@ -11,6 +11,7 @@ let geojsonLayer;
 let departementsGeoJSON;
 const temperatureData = {};
 const months = [];
+let tempChartInstance = null; // Chart.js instance pour le panneau
 
 // Génération des mois avec limite à septembre 2025
 for (let y = 2018; y <= 2025; y++) {
@@ -111,29 +112,38 @@ function updateMap(selectedMonth) {
         const content = document.getElementById('sidebarContent');
         
         content.innerHTML = `
-          <h2>${feature.properties.nom}</h2>
-          <p>Code: ${code}</p>
-          <p>Température: ${temp ?? 'N/A'} °C</p>
-          <p>Mois: ${selectedMonth}</p>
-          <div class="side_volet">
-    <div class="graph">
-        <img class="contenu_graph" href="image/Capture d'écran 2025-10-22 153143.png">
-    </div>
-    <div class="text_graph">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique tenetur dolor error dolore ipsam impedit laborum. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet veniam aliquam tenetur consequuntur, non alias molestiae! Vero voluptatum asperiores voluptate!
-    </div>
-    <div class="graph">
-        
-    </div>
-    <div class="text_graph">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. In ad iste eos, optio quas nesciunt nostrum aut tempore provident aperiam blanditiis omnis culpa,
-    </div>
-    <div class="graph">
-        
-    </div>
-    <div class="text_graph">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi ut soluta delectus debitis nostrum minima veritatis, 
-    </div>
+          <div class="sidebar__header">
+            <h2 class="sidebar__dept-name">${feature.properties.nom}</h2>
+          </div>
+          
+          <div class="sidebar__info">
+            <p><strong>Code:</strong> ${code}</p>
+            <p><strong>Température:</strong> ${temp ?? 'N/A'} °C</p>
+            <p><strong>Mois:</strong> ${selectedMonth}</p>
+          </div>
+
+          <div class="sidebar__charts">
+              <section class="chart-card">
+                <h3 class="chart-card__title">Évolution de la température</h3>
+                <div class="chart-card__placeholder">
+                  <!-- Canvas pour Chart.js -->
+                  <canvas id="tempChart" aria-label="Graphique température moyenne mensuelle" role="img"></canvas>
+                </div>
+                <p class="chart-card__text">Graphique montrant l'évolution de la température moyenne mensuelle pour ce département.</p>
+              </section>
+
+            <section class="chart-card">
+              <h3 class="chart-card__title">Comparaison nationale</h3>
+              <div class="chart-card__placeholder"></div>
+              <p class="chart-card__text">Comparaison des températures avec la moyenne nationale.</p>
+            </section>
+
+            <section class="chart-card">
+              <h3 class="chart-card__title">Tendances annuelles</h3>
+              <div class="chart-card__placeholder"></div>
+              <p class="chart-card__text">Analyse des tendances de réchauffement sur la période 2018-2025.</p>
+            </section>
+          </div>
         `;
         
         sidebar.classList.add('open');
@@ -144,6 +154,12 @@ function updateMap(selectedMonth) {
           map.invalidateSize();
           const bounds = layer.getBounds();
           map.fitBounds(bounds);
+          // Après que le panneau soit ouvert et la taille recalculée, créer le graphique
+          try {
+            createDeptChart(code, feature.properties.nom);
+          } catch (e) {
+            console.error('Erreur création graphique :', e);
+          }
         }, 300);
       });
 
@@ -186,3 +202,89 @@ slider.addEventListener('input', e => {
   label.textContent = month;
   updateMap(month);
 });
+
+// Crée ou met à jour le chart pour un département donné en utilisant temperatureData
+function createDeptChart(deptCode, deptName) {
+  // labels = months (Année-Mois)
+  const labels = months.slice();
+  const values = labels.map(m => {
+    const v = temperatureData[deptCode]?.[m];
+    // Garder null pour les valeurs manquantes pour que Chart.js laisse un trou
+    return (v === undefined) ? null : v;
+  });
+
+  // Détruire l'instance précédente si existante
+  if (tempChartInstance) {
+    try { tempChartInstance.destroy(); } catch (e) { /* ignore */ }
+    tempChartInstance = null;
+  }
+
+  const canvas = document.getElementById('tempChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Création d'un dégradé vertical pour la ligne
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height || 260);
+  gradient.addColorStop(0, '#BD0026'); // rouge chaud
+  gradient.addColorStop(0.5, 'orange');
+  gradient.addColorStop(1, '#33b6d3'); // bleu clair
+
+  // Couleurs des points selon la température (utilise getColor)
+  const pointBg = values.map(v => (v === null) ? '#ffffff' : getColor(v));
+  const pointBorder = values.map(v => (v === null) ? '#cccccc' : '#222');
+
+  // Configuration Chart.js avec couleurs
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'TMoy (°C)',
+        data: values,
+        borderColor: gradient,
+        backgroundColor: 'rgba(255,165,0,0.12)',
+        tension: 0.3,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: pointBg,
+        pointBorderColor: pointBorder,
+        pointBorderWidth: 1,
+        spanGaps: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Température moyenne mensuelle – ${deptName}`
+        },
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw;
+              return (v === null) ? 'N/A' : `${v} °C`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Mois / Année' },
+          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
+        },
+        y: {
+          title: { display: true, text: 'Température (°C)' }
+        }
+      }
+    }
+  };
+
+  // Ajuster la hauteur du canvas parent pour que le graphique ait une taille visible
+  const placeholder = canvas.parentElement;
+  if (placeholder) placeholder.style.height = '260px';
+
+  tempChartInstance = new Chart(ctx, cfg);
+}
