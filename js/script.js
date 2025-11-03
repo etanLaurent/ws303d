@@ -12,6 +12,9 @@ let departementsGeoJSON;
 const temperatureData = {};
 const months = [];
 let tempChartInstance = null; // Chart.js instance pour le panneau
+let compareChartInstance = null; // Chart.js instance pour la comparaison nationale
+let targetChartInstance = null; // Chart.js instance pour températures cibles
+const targetData = {}; // { '2018-01': 4.5, ... }
 
 // Génération des mois avec limite à septembre 2025
 for (let y = 2018; y <= 2025; y++) {
@@ -71,6 +74,21 @@ async function loadAllData() {
       console.warn(`Fichier ${file} manquant ou invalide`);
     }
   }
+
+  // Charger le fichier des températures cibles (nationales)
+  try {
+    const resp = await fetch('../data/temperatures_cibles.csv');
+    const txt = await resp.text();
+    const res = Papa.parse(txt, { header: true, delimiter: ';' });
+    res.data.forEach(row => {
+      const mois = row['Année-Mois'] || row['Annee-Mois'] || row['Annee-Mois'] || row['Année Mois'];
+      const valueStr = row['TMoy_cible'] || row['TMoy cible'] || row['TMoy_cible '];
+      const finalVal = parseFloat(valueStr);
+      if (mois && !isNaN(finalVal)) targetData[mois] = finalVal;
+    });
+  } catch (e) {
+    console.warn('Fichier temperatures_cibles.csv manquant ou invalide', e);
+  }
 }
 
 // ------------------
@@ -116,11 +134,7 @@ function updateMap(selectedMonth) {
             <h2 class="sidebar__dept-name">${feature.properties.nom}</h2>
           </div>
           
-          <div class="sidebar__info">
-            <p><strong>Code:</strong> ${code}</p>
-            <p><strong>Température:</strong> ${temp ?? 'N/A'} °C</p>
-            <p><strong>Mois:</strong> ${selectedMonth}</p>
-          </div>
+          
 
           <div class="sidebar__charts">
               <section class="chart-card">
@@ -133,16 +147,23 @@ function updateMap(selectedMonth) {
               </section>
 
             <section class="chart-card">
-              <h3 class="chart-card__title">Comparaison nationale</h3>
-              <div class="chart-card__placeholder"></div>
-              <p class="chart-card__text">Comparaison des températures avec la moyenne nationale.</p>
+              <h3 class="chart-card__title">Températures cibles</h3>
+              <div class="chart-card__placeholder">
+                <!-- Canvas pour le graphique des températures cibles -->
+                <canvas id="targetChart" aria-label="Températures réelles vs cibles" role="img"></canvas>
+              </div>
+              <p class="chart-card__text">Températures cibles à atteindre sur la période 2018-2025.</p>
             </section>
 
             <section class="chart-card">
-              <h3 class="chart-card__title">Tendances annuelles</h3>
-              <div class="chart-card__placeholder"></div>
-              <p class="chart-card__text">Analyse des tendances de réchauffement sur la période 2018-2025.</p>
+              <h3 class="chart-card__title">Comparaison nationale</h3>
+              <div class="chart-card__placeholder">
+                <!-- Canvas pour le graphique comparatif -->
+                <canvas id="compareChart" aria-label="Comparaison département vs moyenne nationale" role="img"></canvas>
+              </div>
+              <p class="chart-card__text">Comparaison des températures avec la moyenne nationale.</p>
             </section>
+
           </div>
         `;
         
@@ -287,4 +308,191 @@ function createDeptChart(deptCode, deptName) {
   if (placeholder) placeholder.style.height = '260px';
 
   tempChartInstance = new Chart(ctx, cfg);
+
+  // Après création du graphique départemental, préparer et afficher le graphique comparatif
+  try {
+    // Créer le graphique comparatif initial pour le département cliqué
+    const compareCanvas = document.getElementById('compareChart');
+    if (compareCanvas && compareCanvas.parentElement) compareCanvas.parentElement.style.height = '260px';
+    createCompareChart(deptCode, deptName);
+    // Créer également le graphique réel vs cible
+    createTargetChart(deptCode, deptName);
+  } catch (e) {
+    console.error('Erreur création graphique comparatif :', e);
+  }
 }
+
+// Crée ou met à jour le graphique réel vs cible pour un département donné
+function createTargetChart(deptCode, deptName) {
+  const labels = months.slice();
+  const realValues = labels.map(m => {
+    const v = temperatureData[deptCode]?.[m];
+    return (v === undefined) ? null : v;
+  });
+
+  const targetValues = labels.map(m => {
+    const v = targetData[m];
+    return (v === undefined) ? null : v;
+  });
+
+  // Détruire instance précédente si besoin
+  if (targetChartInstance) {
+    try { targetChartInstance.destroy(); } catch (e) { /* ignore */ }
+    targetChartInstance = null;
+  }
+
+  const canvas = document.getElementById('targetChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: `${deptName} (réel)`,
+          data: realValues,
+          borderColor: 'orange',
+          backgroundColor: 'rgba(255,165,0,0.12)',
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          spanGaps: false
+        },
+        {
+          label: 'Température cible',
+          data: targetValues,
+          borderColor: '#28a745',
+          backgroundColor: 'rgba(40,167,69,0.12)',
+          tension: 0.3,
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          spanGaps: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: `Température réelle vs température cible – ${deptName}` },
+        legend: { display: true },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false },
+      scales: {
+        x: { title: { display: true, text: 'Mois / Année' }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
+        y: { title: { display: true, text: 'Température (°C)' } }
+      }
+    }
+  };
+
+  const placeholder = canvas.parentElement;
+  if (placeholder) placeholder.style.height = '260px';
+
+  targetChartInstance = new Chart(ctx, cfg);
+}
+
+// Calculer la moyenne nationale (par mois) à partir de temperatureData
+function computeNationalAverage() {
+  const result = months.map(m => {
+    let sum = 0, count = 0;
+    for (const code in temperatureData) {
+      const v = temperatureData[code]?.[m];
+      if (v !== undefined && v !== null && !isNaN(v)) { sum += v; count++; }
+    }
+    return count ? +(sum / count).toFixed(2) : null;
+  });
+  return result;
+}
+
+// Crée ou met à jour le graphique comparatif (département vs moyenne nationale)
+function createCompareChart(deptCode, deptName) {
+  const labels = months.slice();
+  const deptValues = labels.map(m => {
+    const v = temperatureData[deptCode]?.[m];
+    return (v === undefined) ? null : v;
+  });
+
+  const nationalValues = computeNationalAverage();
+
+  // Détruire instance précédente si besoin
+  if (compareChartInstance) {
+    try { compareChartInstance.destroy(); } catch (e) { /* ignore */ }
+    compareChartInstance = null;
+  }
+
+  const canvas = document.getElementById('compareChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // définir datasets
+  const cfg = {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: deptName,
+          data: deptValues,
+          borderColor: 'orange',
+          backgroundColor: 'rgba(255,165,0,0.12)',
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          spanGaps: false
+        },
+        {
+          label: 'Moyenne nationale',
+          data: nationalValues,
+          borderColor: '#2d7cb0',
+          backgroundColor: 'rgba(45,124,176,0.12)',
+          tension: 0.3,
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          spanGaps: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Comparaison température mensuelle – ${deptName} vs Moyenne nationale`
+        },
+        legend: { display: true },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw;
+              return (v === null) ? `${ctx.dataset.label}: N/A` : `${ctx.dataset.label}: ${v} °C`;
+            }
+          }
+        }
+      },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false },
+      scales: {
+        x: {
+          title: { display: true, text: 'Mois / Année' },
+          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
+        },
+        y: {
+          title: { display: true, text: 'Température (°C)' }
+        }
+      }
+    }
+  };
+
+  // Ajuster la hauteur du conteneur parent
+  const placeholder = canvas.parentElement;
+  if (placeholder) placeholder.style.height = '260px';
+
+  compareChartInstance = new Chart(ctx, cfg);
+}
+
+
