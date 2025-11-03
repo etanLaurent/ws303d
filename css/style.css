@@ -49,8 +49,20 @@ body {
 }
 
 .logo_nav {
-    height: 100%;
-    text-decoration: none;
+  /* make the logo + text a centered inline block inside the nav */
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo_nav img {
+  /* constrain the logo height so it fits the nav and centers with the text */
+  height: 2.5rem;
+  width: auto;
+  display: block;
 }
 
 nav {
@@ -175,12 +187,12 @@ main{
 }
 
 .title_index{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    margin-top: 10%;
-    color: #fff;
-    font-size: 12vh;
+  /* ensure the title is centered on the page */
+  display: block;
+  margin: 10% auto 0 auto;
+  color: #fff;
+  font-size: 8vh;
+  text-align: center;
 }
 
 h2{
@@ -193,16 +205,16 @@ h2{
 }
 
 #direct_carte{
-    display: flex;
-    justify-self: center;
-    padding-top: 5vh;
-    padding-bottom: 5vh;
-    padding-right: 20vh;
-    padding-left: 20vh;
-    border-radius: 40px;
-    background-color: #B4D6F1;
-    border-style: none;
-    box-shadow: #2f2e2e 2px 2px 2px;
+  /* center the button horizontally and make padding symmetric/responsive */
+  display: block;
+  margin: 5vh auto;
+  padding: 1rem 2.5rem;
+  border-radius: 40px;
+  background-color: #B4D6F1;
+  border: none;
+  box-shadow: #2f2e2e 2px 2px 2px;
+  text-align: center;
+  width: fit-content;
 }
 
 #direct_carte a{
